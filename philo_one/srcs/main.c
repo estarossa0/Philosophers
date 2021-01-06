@@ -32,28 +32,21 @@ int error_input(int argc, char **argv)
 
 void	*Philosophers(void *idptr)
 {
-	struct timeval	last_meal;
-	int				alive;
-	int				id;
-	int				hands[2];
+	t_philo		me;
+	int			hands[2];
 
-	id = (long)idptr;
-	gettimeofday(&last_meal, NULL);
-	while (g_all_alive)
+	me.id = (long)idptr;
+	gettimeofday(&(me.last_meal), NULL);
+	pthread_create(&(me.checker), NULL, liveness_thread, (void *)&me);
+	while (1)
 	{
-		if (must_die(&last_meal))
-		{
-			g_liveness[id] = 0;
-			logger(id, DIED);
-			break ;
-		}
-		fork_available(id, hands);
+		fork_available(me.id, hands);
 		if (hands[0] && hands[1])
 		{
 			hands[0] = 0;
 			hands[1] = 0;
-			g_all_alive ? get_food(id, &last_meal) : 1;
-			g_all_alive ? go_sleep(id, last_meal) : 1;
+			get_food(me.id, &(me.last_meal));
+			go_sleep(me.id, me.last_meal);
 		}
 	}
 	return (NULL);
@@ -66,8 +59,6 @@ void	logger(int id, int type)
 
 	gettimeofday(&now, NULL);
 	ms = get_ms_diff(&g_save, &now);
-	if (g_all_alive == 0 && type != DIED)
-		return ;
 	pthread_mutex_lock(&g_logger_mutex);
 	ft_putnbr(ms);
 	write(1, " ", 1);
@@ -84,16 +75,12 @@ void	logger(int id, int type)
 void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 {
 	g_forks = (int *)malloc(sizeof(int) * g_data[NPHILO]);
-	g_liveness = (int *)malloc(sizeof(int) * g_data[NPHILO]);
 	g_eat_amount = (int *)malloc(sizeof(int) * g_data[NPHILO]);
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
-	g_all_alive = 1;
 	memset(g_forks, 1,g_data[NPHILO] * sizeof(int));
-	memset(g_liveness, 1,g_data[NPHILO] * sizeof(int));
 	memset(g_eat_amount, 0,g_data[NPHILO] * sizeof(int));
 	pthread_mutex_init(&g_logger_mutex, NULL);
 	pthread_mutex_init(&g_forks_mutex, NULL);
-	pthread_create(liveness_thread, NULL, all_alive, (void *)NULL);
 }
 
 int main(int argc, char **argv)

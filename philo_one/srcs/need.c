@@ -74,30 +74,18 @@ void	go_sleep(int id, struct timeval lastmeal)
 	usleep(g_data[TSLEEP] * 1000);
 }
 
-void		*all_alive(void *ptr)
+void		*liveness_thread(void *ptr)
 {
-	int		index;
-	int		philos;
+	t_philo		*me;
 
-	index = (long)ptr;
+	me = (t_philo *)ptr;
 	while (1)
 	{
-		philos = -1;
-		if (g_liveness[index] == 0)
+		if (must_die(&(me->last_meal)))
 		{
-			g_all_alive = 0;
+			logger(me->id, DIED);
 			break ;
 		}
-		while (g_data[NTPEAT] != -1 && ++philos < g_data[NPHILO])
-		{
-			if (g_eat_amount[philos] < g_data[NTPEAT])
-				break ;
-			if (philos == g_data[NPHILO] - 1)
-				g_all_alive = 0;
-		}
-		index++;
-		if (index == g_data[NPHILO])
-			index = 0;
 	}
 	return (NULL);
 }
