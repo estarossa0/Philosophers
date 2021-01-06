@@ -36,11 +36,14 @@ void	*Philosophers(void *idptr)
 	int			hands[2];
 
 	me.id = (long)idptr;
+	me.eat_amount = g_data[NTPEAT];
 	pthread_mutex_init(&(me.eat_locker), NULL);
 	gettimeofday(&(me.last_meal), NULL);
 	pthread_create(&(me.checker), NULL, liveness_thread, (void *)&me);
 	while (1)
 	{
+		if (me.eat_amount == 0 && g_data[NTPEAT] != -1)
+			break ;
 		fork_available(me.id, hands);
 		if (hands[0] && hands[1])
 		{
@@ -50,6 +53,9 @@ void	*Philosophers(void *idptr)
 			go_sleep(me.id, me.last_meal);
 		}
 	}
+	g_eat_amount--;
+	if (g_eat_amount == 0)
+		pthread_mutex_unlock(&g_join_mutex);
 	return (NULL);
 }
 
@@ -77,10 +83,9 @@ void	logger(int id, int type)
 void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 {
 	g_forks = (int *)malloc(sizeof(int) * g_data[NPHILO]);
-	g_eat_amount = (int *)malloc(sizeof(int) * g_data[NPHILO]);
+	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
 	memset(g_forks, 1,g_data[NPHILO] * sizeof(int));
-	memset(g_eat_amount, 0,g_data[NPHILO] * sizeof(int));
 	pthread_mutex_init(&g_logger_mutex, NULL);
 	pthread_mutex_init(&g_forks_mutex, NULL);
 	pthread_mutex_init(&g_join_mutex, NULL);
@@ -104,5 +109,6 @@ int main(int argc, char **argv)
 	{
 		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
 	}
-	pthread_mutex_lock(&g_join_mutex);
+	if (g_data[NPHILO] != 0)
+		pthread_mutex_lock(&g_join_mutex);
 }

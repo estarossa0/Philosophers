@@ -27,7 +27,7 @@ int				get_ms_diff(struct timeval *a, struct timeval *b);
 void			logger(int id, int type);
 int				g_data[5];
 int				*g_forks;
-int				*g_eat_amount;
+int				g_eat_amount;
 struct	timeval	g_save;
 pthread_mutex_t	g_logger_mutex;
 pthread_mutex_t	g_forks_mutex;
@@ -38,5 +38,6 @@ typedef	struct	s_philo
 	struct	timeval	last_meal;
 	pthread_t		checker;
 	pthread_mutex_t	eat_locker;
+	int				eat_amount;
 }				t_philo;
 #endif
