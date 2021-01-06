@@ -61,7 +61,7 @@ void	get_food(t_philo *me)
 
 	pthread_mutex_lock(&(me->eat_locker));
 	logger(me->id, EATING);
-	g_eat_amount[me->id]++;
+	me->eat_amount--;
 	gettimeofday(&(me->last_meal), NULL);
 	usleep(g_data[TEAT] * 1000);
 	get_fork_indexs(me->id, fork_index);
