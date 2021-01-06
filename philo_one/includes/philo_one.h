@@ -31,6 +31,7 @@ int				*g_eat_amount;
 struct	timeval	g_save;
 pthread_mutex_t	g_logger_mutex;
 pthread_mutex_t	g_forks_mutex;
+pthread_mutex_t	g_join_mutex;
 typedef	struct	s_philo
 {
 	int				id;
