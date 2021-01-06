@@ -36,6 +36,7 @@ void	*Philosophers(void *idptr)
 	int			hands[2];
 
 	me.id = (long)idptr;
+	pthread_mutex_init(&(me.eat_locker), NULL);
 	gettimeofday(&(me.last_meal), NULL);
 	pthread_create(&(me.checker), NULL, liveness_thread, (void *)&me);
 	while (1)
@@ -45,7 +46,7 @@ void	*Philosophers(void *idptr)
 		{
 			hands[0] = 0;
 			hands[1] = 0;
-			get_food(me.id, &(me.last_meal));
+			get_food(&me);
 			go_sleep(me.id, me.last_meal);
 		}
 	}

@@ -55,17 +55,19 @@ void		fork_available(int id, int hands[2])
 	pthread_mutex_unlock(&g_forks_mutex);
 }
 
-void	get_food(int id, struct timeval *last_meal)
+void	get_food(t_philo *me)
 {
 	int		fork_index[2];
 
-	logger(id, EATING);
-	g_eat_amount[id]++;
-	gettimeofday(last_meal, NULL);
+	pthread_mutex_lock(&(me->eat_locker));
+	logger(me->id, EATING);
+	g_eat_amount[me->id]++;
+	gettimeofday(&(me->last_meal), NULL);
 	usleep(g_data[TEAT] * 1000);
-	get_fork_indexs(id, fork_index);
+	get_fork_indexs(me->id, fork_index);
 	g_forks[fork_index[0]] = 1;
 	g_forks[fork_index[1]] = 1;
+	pthread_mutex_unlock(&(me->eat_locker));
 }
 
 void	go_sleep(int id, struct timeval lastmeal)
@@ -81,12 +83,14 @@ void		*liveness_thread(void *ptr)
 	me = (t_philo *)ptr;
 	while (1)
 	{
+		pthread_mutex_lock(&(me->eat_locker));
 		if (must_die(&(me->last_meal)))
 		{
 			logger(me->id, DIED);
 			pthread_mutex_unlock(&g_join_mutex);
 			break ;
 		}
+		pthread_mutex_unlock(&(me->eat_locker));
 	}
 	return (NULL);
 }
