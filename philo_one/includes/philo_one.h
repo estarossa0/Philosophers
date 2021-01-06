@@ -21,7 +21,7 @@ int				ft_atoi(const char *str);
 void			ft_putnbr(int n);
 void			*liveness_thread(void *ptr);
 void			go_sleep(int id, struct timeval lastmeal);
-void			get_food(int id, struct timeval *last_meal);
+void			get_food(t_philo *me);
 void			fork_available(int id, int hands[2]);
 int				get_ms_diff(struct timeval *a, struct timeval *b);
 void			logger(int id, int type);
@@ -37,5 +37,6 @@ typedef	struct	s_philo
 	int				id;
 	struct	timeval	last_meal;
 	pthread_t		checker;
+	pthread_mutex_t	eat_locker;
 }				t_philo;
 #endif
