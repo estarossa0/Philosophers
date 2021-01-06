@@ -69,7 +69,8 @@ void	logger(int id, int type)
 	type == THINK ? write(1, " is thinking", 12) : 1;
 	type == DIED ? write(1, " died", 5) : 1;
 	write(1, "\n", 1);
-	pthread_mutex_unlock(&g_logger_mutex);
+	if (type != DIED)
+		pthread_mutex_unlock(&g_logger_mutex);
 }
 
 void	init(pthread_t	**threads, pthread_t	*liveness_thread)
