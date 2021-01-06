@@ -82,6 +82,8 @@ void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 	memset(g_eat_amount, 0,g_data[NPHILO] * sizeof(int));
 	pthread_mutex_init(&g_logger_mutex, NULL);
 	pthread_mutex_init(&g_forks_mutex, NULL);
+	pthread_mutex_init(&g_join_mutex, NULL);
+	pthread_mutex_lock(&g_join_mutex);
 }
 
 int main(int argc, char **argv)
@@ -101,8 +103,5 @@ int main(int argc, char **argv)
 	{
 		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
 	}
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
-	{
-		pthread_join(threads[i], NULL);
-	}
+	pthread_mutex_lock(&g_join_mutex);
 }

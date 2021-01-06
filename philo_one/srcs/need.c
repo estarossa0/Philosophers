@@ -61,8 +61,8 @@ void	get_food(int id, struct timeval *last_meal)
 
 	logger(id, EATING);
 	g_eat_amount[id]++;
-	usleep(g_data[TEAT] * 1000);
 	gettimeofday(last_meal, NULL);
+	usleep(g_data[TEAT] * 1000);
 	get_fork_indexs(id, fork_index);
 	g_forks[fork_index[0]] = 1;
 	g_forks[fork_index[1]] = 1;
@@ -84,6 +84,7 @@ void		*liveness_thread(void *ptr)
 		if (must_die(&(me->last_meal)))
 		{
 			logger(me->id, DIED);
+			pthread_mutex_unlock(&g_join_mutex);
 			break ;
 		}
 	}
