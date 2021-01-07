@@ -3,13 +3,15 @@ FLAGS = # -Wall -Wextra -Werror
 SRC_FOLDER = ./srcs
 HEADER_FOLDER = ./includes
 OBJECT_FOLDER = ./objects
-LIBS =
+LIBS = -pthread
 RED = \033[0;31m
 GREEN = \033[0;32m
 GOLD = \033[0;33m
 RESET = \033[0m
 
 SRC_FILES = main.c \
+			need.c \
+			libft.c \
 
 OBJECT_FILES = $(SRC_FILES:.c=.o)
 OBJECT_FILES := $(addprefix $(OBJECT_FOLDER)/, $(OBJECT_FILES))

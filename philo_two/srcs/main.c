@@ -34,10 +34,12 @@ void	*Philosophers(void *idptr)
 {
 	t_philo		me;
 	int			hands[2];
+	char		name[15];
 
 	me.id = (long)idptr;
 	me.eat_amount = g_data[NTPEAT];
-	pthread_mutex_init(&(me.eat_locker), NULL);
+	ft_itoa(me.id + 1, name);
+	me.eat_locker = sem_open(name, O_CREAT, 0644, 1);
 	gettimeofday(&(me.last_meal), NULL);
 	pthread_create(&(me.checker), NULL, liveness_thread, (void *)&me);
 	while (1)
@@ -55,7 +57,7 @@ void	*Philosophers(void *idptr)
 	}
 	g_eat_amount--;
 	if (g_eat_amount == 0)
-		pthread_mutex_unlock(&g_join_mutex);
+		sem_post(g_join_sema);
 	return (NULL);
 }
 
@@ -66,7 +68,7 @@ void	logger(int id, int type)
 
 	gettimeofday(&now, NULL);
 	ms = get_ms_diff(&g_save, &now);
-	pthread_mutex_lock(&g_logger_mutex);
+	sem_wait(g_logger_sema);
 	ft_putnbr(ms);
 	write(1, " ", 1);
 	ft_putnbr(id + 1);
@@ -77,7 +79,7 @@ void	logger(int id, int type)
 	type == DIED ? write(1, " died", 5) : 1;
 	write(1, "\n", 1);
 	if (type != DIED)
-		pthread_mutex_unlock(&g_logger_mutex);
+		sem_post(g_logger_sema);
 }
 
 void	init(pthread_t	**threads, pthread_t	*liveness_thread)
@@ -86,10 +88,9 @@ void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
 	memset(g_forks, 1,g_data[NPHILO] * sizeof(int));
-	pthread_mutex_init(&g_logger_mutex, NULL);
-	pthread_mutex_init(&g_forks_mutex, NULL);
-	pthread_mutex_init(&g_join_mutex, NULL);
-	pthread_mutex_lock(&g_join_mutex);
+	g_logger_sema = sem_open("logger", O_CREAT, 0644, 1);
+	g_join_sema =  sem_open("join", O_CREAT, 0664, 0);
+	g_forks_sema = sem_open("forks", O_CREAT, 0664, 1);
 }
 
 int main(int argc, char **argv)
@@ -110,5 +111,5 @@ int main(int argc, char **argv)
 		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
 	}
 	if (g_data[NPHILO] != 0)
-		pthread_mutex_lock(&g_join_mutex);
+		sem_wait(g_join_sema);
 }

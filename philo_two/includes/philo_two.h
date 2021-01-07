@@ -7,6 +7,8 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <string.h>
+# include <semaphore.h>
+# include <fcntl.h>
 # define NPHILO	0
 # define TDIE	1
 # define TEAT	2
@@ -22,7 +24,7 @@ typedef	struct	s_philo
 	int				id;
 	struct	timeval	last_meal;
 	pthread_t		checker;
-	pthread_mutex_t	eat_locker;
+	sem_t			*eat_locker;
 	int				eat_amount;
 }				t_philo;
 int				ft_atoi(const char *str);
@@ -33,11 +35,12 @@ void			get_food(t_philo *me);
 void			fork_available(int id, int hands[2]);
 int				get_ms_diff(struct timeval *a, struct timeval *b);
 void			logger(int id, int type);
+char			*ft_itoa(int n, char result[15]);
 int				g_data[5];
 int				*g_forks;
 int				g_eat_amount;
 struct	timeval	g_save;
-pthread_mutex_t	g_logger_mutex;
-pthread_mutex_t	g_forks_mutex;
-pthread_mutex_t	g_join_mutex;
+sem_t			*g_logger_sema;
+sem_t			*g_forks_sema;
+sem_t			*g_join_sema;
 #endif

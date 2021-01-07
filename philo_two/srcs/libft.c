@@ -41,3 +41,27 @@ void	ft_putnbr(int n)
 		}
 	}
 }
+
+
+char	*ft_itoa(int n, char result[15])
+{
+	unsigned int		n_tmp;
+	int					index;
+	int					size;
+
+	index = 0;
+	size = 0;
+	n_tmp = (unsigned int)n;
+	while (n)
+	{
+		n = n / 10;
+		size++;
+	}
+	while (n_tmp > 0)
+	{
+		result[index++] = n_tmp % 10 + '0';
+		n_tmp /= 10;
+	}
+	result[index] = '\0';
+	return (result);
+}
