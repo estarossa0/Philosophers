@@ -84,13 +84,11 @@ void	logger(int id, int type)
 
 void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 {
-	g_forks = (int *)malloc(sizeof(int) * g_data[NPHILO]);
 	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
-	memset(g_forks, 1,g_data[NPHILO] * sizeof(int));
 	g_logger_sema = sem_open("logger", O_CREAT, 0644, 1);
 	g_join_sema =  sem_open("join", O_CREAT, 0664, 0);
-	g_forks_sema = sem_open("forks", O_CREAT, 0664, 1);
+	g_forks_sema = sem_open("forks", O_CREAT, 0664, g_data[NPHILO]);
 }
 
 int main(int argc, char **argv)

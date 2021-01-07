@@ -37,7 +37,6 @@ int				get_ms_diff(struct timeval *a, struct timeval *b);
 void			logger(int id, int type);
 char			*ft_itoa(int n, char result[15]);
 int				g_data[5];
-int				*g_forks;
 int				g_eat_amount;
 struct	timeval	g_save;
 sem_t			*g_logger_sema;

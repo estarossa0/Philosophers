@@ -26,47 +26,25 @@ int		must_die(struct timeval *last_meal)
 	return 0;
 }
 
-void	get_fork_indexs(int id,int fork_index[2])
-{
-	fork_index[0] = (id == 0) ? g_data[NPHILO] - 1 : id - 1;
-	fork_index[1] = id;
-}
-
 void		fork_available(int id, int hands[2])
 {
-	int		fork_index[2];
 	int		*pick;
 
-	get_fork_indexs(id, fork_index);
 	pick = hands[0] ? &hands[1] : &hands[0];
 	sem_wait(g_forks_sema);
-	if (g_forks[fork_index[0]])
-	{
-		g_forks[fork_index[0]] = 0;
-		*pick = 1;
-		logger(id, FORK);
-	}
-	else if (g_forks[fork_index[1]])
-	{
-		g_forks[fork_index[1]] = 0;
-		*pick = 1;
-		logger(id, FORK);
-	}
-	sem_post(g_forks_sema);
+	*pick = 1;
+	logger(id, FORK);
 }
 
 void	get_food(t_philo *me)
 {
-	int		fork_index[2];
-
 	sem_wait(me->eat_locker);
 	logger(me->id, EATING);
 	me->eat_amount--;
 	gettimeofday(&(me->last_meal), NULL);
 	usleep(g_data[TEAT] * 1000);
-	get_fork_indexs(me->id, fork_index);
-	g_forks[fork_index[0]] = 1;
-	g_forks[fork_index[1]] = 1;
+	sem_post(g_forks_sema);
+	sem_post(g_forks_sema);
 	sem_post(me->eat_locker);
 }
 
