@@ -83,6 +83,7 @@ void		*liveness_thread(void *ptr)
 	me = (t_philo *)ptr;
 	while (1)
 	{
+		usleep(100);
 		pthread_mutex_lock(&(me->eat_locker));
 		if (must_die(&(me->last_meal)))
 		{
