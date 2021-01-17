@@ -33,7 +33,6 @@ int error_input(int argc, char **argv)
 void	*Philosophers(void *idptr)
 {
 	t_philo		me;
-	int			hands[2];
 
 	me.id = (long)idptr;
 	me.eat_amount = g_data[NTPEAT];
@@ -44,14 +43,9 @@ void	*Philosophers(void *idptr)
 	{
 		if (me.eat_amount == 0 && g_data[NTPEAT] != -1)
 			break ;
-		fork_available(me.id, hands);
-		if (hands[0] && hands[1])
-		{
-			hands[0] = 0;
-			hands[1] = 0;
-			get_food(&me);
-			go_sleep(me.id, me.last_meal);
-		}
+		fork_available(me.id);
+		get_food(&me);
+		go_sleep(me.id, me.last_meal);
 	}
 	g_eat_amount--;
 	if (g_eat_amount == 0)
@@ -82,12 +76,12 @@ void	logger(int id, int type)
 
 void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 {
-	g_forks = (int *)malloc(sizeof(int) * g_data[NPHILO]);
+	g_forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * g_data[NPHILO]);
 	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
-	memset(g_forks, 1,g_data[NPHILO] * sizeof(int));
 	pthread_mutex_init(&g_logger_mutex, NULL);
-	pthread_mutex_init(&g_forks_mutex, NULL);
+	for (size_t i = 0; i < g_data[NPHILO]; i++)
+		pthread_mutex_init(&g_forks[i], NULL);
 	pthread_mutex_init(&g_join_mutex, NULL);
 	pthread_mutex_lock(&g_join_mutex);
 }
