@@ -102,6 +102,7 @@ int main(int argc, char **argv)
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 	{
 		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
+		usleep(100);
 	}
 	if (g_data[NPHILO] != 0)
 		pthread_mutex_lock(&g_join_mutex);
