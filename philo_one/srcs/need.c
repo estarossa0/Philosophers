@@ -32,27 +32,15 @@ void	get_fork_indexs(int id,int fork_index[2])
 	fork_index[1] = id;
 }
 
-void		fork_available(int id, int hands[2])
+void		fork_available(int id)
 {
 	int		fork_index[2];
-	int		*pick;
 
 	get_fork_indexs(id, fork_index);
-	pick = hands[0] ? &hands[1] : &hands[0];
-	pthread_mutex_lock(&g_forks_mutex);
-	if (g_forks[fork_index[0]])
-	{
-		g_forks[fork_index[0]] = 0;
-		*pick = 1;
-		logger(id, FORK);
-	}
-	else if (g_forks[fork_index[1]])
-	{
-		g_forks[fork_index[1]] = 0;
-		*pick = 1;
-		logger(id, FORK);
-	}
-	pthread_mutex_unlock(&g_forks_mutex);
+	pthread_mutex_lock(&g_forks[fork_index[0]]);
+	logger(id, FORK);
+	pthread_mutex_lock(&g_forks[fork_index[1]]);
+	logger(id, FORK);
 }
 
 void	get_food(t_philo *me)
@@ -65,8 +53,8 @@ void	get_food(t_philo *me)
 	gettimeofday(&(me->last_meal), NULL);
 	usleep(g_data[TEAT] * 1000);
 	get_fork_indexs(me->id, fork_index);
-	g_forks[fork_index[0]] = 1;
-	g_forks[fork_index[1]] = 1;
+	pthread_mutex_unlock(&g_forks[fork_index[0]]);
+	pthread_mutex_unlock(&g_forks[fork_index[1]]);
 	pthread_mutex_unlock(&(me->eat_locker));
 }
 
