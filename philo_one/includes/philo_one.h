@@ -17,6 +17,7 @@
 # define SLEEP	2
 # define THINK	3
 # define DIED	4
+typedef	struct	s_philo	t_philo;
 int				ft_atoi(const char *str);
 void			ft_putnbr(int n);
 void			*liveness_thread(void *ptr);
