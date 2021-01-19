@@ -29,9 +29,9 @@ void			logger(int id, int type);
 int				g_data[5];
 pthread_mutex_t	*g_forks;
 int				g_eat_amount;
+short			g_stop_threads;
 struct	timeval	g_save;
 pthread_mutex_t	g_logger_mutex;
-pthread_mutex_t	g_join_mutex;
 typedef	struct	s_philo
 {
 	int				id;
