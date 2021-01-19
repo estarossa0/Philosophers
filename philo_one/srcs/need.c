@@ -69,7 +69,7 @@ void		*liveness_thread(void *ptr)
 	t_philo		*me;
 
 	me = (t_philo *)ptr;
-	while (1)
+	while (!g_stop_threads)
 	{
 		usleep(100);
 		pthread_mutex_lock(&(me->eat_locker));
