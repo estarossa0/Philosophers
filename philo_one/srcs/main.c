@@ -66,15 +66,15 @@ void	logger(int id, int type)
 	pthread_mutex_lock(&g_logger_mutex);
 	if (!g_stop_threads)
 	{
-	ft_putnbr(ms);
-	write(1, " ", 1);
-	ft_putnbr(id + 1);
-	type == FORK ? write(1, " has taken a fork", 17) : 1;
-	type == EATING ? write(1, " is eating", 10) : 1;
-	type == SLEEP ? write(1, " is sleeping", 12) : 1;
-	type == THINK ? write(1, " is thinking", 12) : 1;
-	type == DIED ? write(1, " died", 5) : 1;
-	write(1, "\n", 1);
+		ft_putnbr(ms);
+		write(1, " ", 1);
+		ft_putnbr(id + 1);
+		type == FORK ? write(1, " has taken a fork", 17) : 1;
+		type == EATING ? write(1, " is eating", 10) : 1;
+		type == SLEEP ? write(1, " is sleeping", 12) : 1;
+		type == THINK ? write(1, " is thinking", 12) : 1;
+		type == DIED ? write(1, " died", 5) : 1;
+		write(1, "\n", 1);
 	}
 	if (type == DIED)
 		g_stop_threads = 1;
