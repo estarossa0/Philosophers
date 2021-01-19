@@ -59,16 +59,16 @@ void		*liveness_thread(void *ptr)
 	t_philo		*me;
 
 	me = (t_philo *)ptr;
-	while (1)
+	while (me->alive && !g_stop_threads)
 	{
 		sem_wait(me->eat_locker);
 		if (must_die(&(me->last_meal)))
 		{
 			logger(me->id, DIED);
-			sem_post(g_join_sema);
-			break ;
+			me->alive = 0;
 		}
 		sem_post(me->eat_locker);
+		usleep(100);
 	}
 	return (NULL);
 }

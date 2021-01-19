@@ -26,6 +26,7 @@ typedef	struct	s_philo
 	pthread_t		checker;
 	sem_t			*eat_locker;
 	int				eat_amount;
+	short			alive;
 }				t_philo;
 int				ft_atoi(const char *str);
 void			ft_putnbr(int n);
@@ -38,8 +39,8 @@ void			logger(int id, int type);
 char			*ft_itoa(int n, char result[15]);
 int				g_data[5];
 int				g_eat_amount;
+short			g_stop_threads;
 struct	timeval	g_save;
 sem_t			*g_logger_sema;
 sem_t			*g_forks_sema;
-sem_t			*g_join_sema;
 #endif
