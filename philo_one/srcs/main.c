@@ -35,6 +35,7 @@ void	*Philosophers(void *idptr)
 	t_philo		me;
 
 	me.id = (long)idptr;
+	me.alive = 1;
 	me.eat_amount = g_data[NTPEAT];
 	pthread_mutex_init(&(me.eat_locker), NULL);
 	gettimeofday(&(me.last_meal), NULL);
@@ -47,6 +48,7 @@ void	*Philosophers(void *idptr)
 		get_food(&me);
 		go_sleep(me.id, me.last_meal);
 	}
+	me.alive = 0;
 	g_eat_amount--;
 	if (g_eat_amount == 0)
 		g_stop_threads = 1;

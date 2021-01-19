@@ -39,5 +39,6 @@ typedef	struct	s_philo
 	pthread_t		checker;
 	pthread_mutex_t	eat_locker;
 	int				eat_amount;
+	short			alive;
 }				t_philo;
 #endif

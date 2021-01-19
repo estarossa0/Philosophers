@@ -69,15 +69,14 @@ void		*liveness_thread(void *ptr)
 	t_philo		*me;
 
 	me = (t_philo *)ptr;
-	while (!g_stop_threads)
+	while (me->alive && !g_stop_threads)
 	{
 		usleep(100);
 		pthread_mutex_lock(&(me->eat_locker));
 		if (must_die(&(me->last_meal)))
 		{
 			logger(me->id, DIED);
-			pthread_mutex_unlock(&g_join_mutex);
-			break ;
+			me->alive = 0;
 		}
 		pthread_mutex_unlock(&(me->eat_locker));
 	}
