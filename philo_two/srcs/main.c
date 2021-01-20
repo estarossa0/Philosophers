@@ -55,6 +55,7 @@ void	*Philosophers(void *idptr)
 	if (g_eat_amount == 0)
 		g_stop_threads = 1;
 	pthread_join(me.checker, NULL);
+	sem_close(me.eat_locker);
 	return (NULL);
 }
 
@@ -94,6 +95,13 @@ void	init(pthread_t	**threads)
 	g_forks_sema = sem_open("forks", O_CREAT, 0664, g_data[NPHILO]);
 }
 
+void	clear(pthread_t	*threads)
+{
+	free(threads);
+	sem_close(g_forks_sema);
+	sem_close(g_logger_sema);
+}
+
 int main(int argc, char **argv)
 {
 	pthread_t	*threads;
@@ -113,4 +121,5 @@ int main(int argc, char **argv)
 	}
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 		pthread_join(threads[i] ,NULL);
+	clear(threads);
 }
