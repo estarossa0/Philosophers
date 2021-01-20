@@ -9,6 +9,7 @@
 # include <string.h>
 # include <semaphore.h>
 # include <fcntl.h>
+# include <sys/stat.h>
 # define NPHILO	0
 # define TDIE	1
 # define TEAT	2

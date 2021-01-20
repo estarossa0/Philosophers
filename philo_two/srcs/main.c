@@ -1,5 +1,4 @@
 #include "philo_two.h"
-#include <sys/stat.h>
 int error_input(int argc, char **argv)
 {
 	int		error;
