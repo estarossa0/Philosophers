@@ -32,7 +32,6 @@ int error_input(int argc, char **argv)
 void	*Philosophers(void *idptr)
 {
 	t_philo		me;
-	int			hands[2];
 	char		name[15];
 
 	me.id = (long)idptr;
@@ -46,14 +45,9 @@ void	*Philosophers(void *idptr)
 	{
 		if (me.eat_amount == 0 && g_data[NTPEAT] != -1)
 			break ;
-		fork_available(me.id, hands);
-		if (hands[0] && hands[1])
-		{
-			hands[0] = 0;
-			hands[1] = 0;
-			get_food(&me);
-			go_sleep(me.id, me.last_meal);
-		}
+		fork_available(me.id);
+		get_food(&me);
+		go_sleep(me.id, me.last_meal);
 	}
 	me.alive = 0;
 	g_eat_amount--;
@@ -88,7 +82,7 @@ void	logger(int id, int type)
 	sem_post(g_logger_sema);
 }
 
-void	init(pthread_t	**threads, pthread_t	*liveness_thread)
+void	init(pthread_t	**threads)
 {
 	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
@@ -100,7 +94,6 @@ void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 int main(int argc, char **argv)
 {
 	pthread_t	*threads;
-	pthread_t	liveness_thread;
 
 	if (error_input(argc, argv))
 		return 1;
@@ -108,7 +101,7 @@ int main(int argc, char **argv)
 	argc = 0;
 	while (argv[++argc])
 		g_data[argc - 1] = ft_atoi(argv[argc]);
-	init(&threads, &liveness_thread);
+	init(&threads);
 	gettimeofday(&g_save, NULL);
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 	{

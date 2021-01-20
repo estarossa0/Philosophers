@@ -34,7 +34,7 @@ void			ft_putnbr(int n);
 void			*liveness_thread(void *ptr);
 void			go_sleep(int id, struct timeval lastmeal);
 void			get_food(t_philo *me);
-void			fork_available(int id, int hands[2]);
+void			fork_available(int id);
 int				get_ms_diff(struct timeval *a, struct timeval *b);
 void			logger(int id, int type);
 char			*ft_itoa(int n, char result[15]);

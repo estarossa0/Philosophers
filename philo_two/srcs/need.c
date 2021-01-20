@@ -26,13 +26,11 @@ int		must_die(struct timeval *last_meal)
 	return 0;
 }
 
-void		fork_available(int id, int hands[2])
+void		fork_available(int id)
 {
-	int		*pick;
-
-	pick = hands[0] ? &hands[1] : &hands[0];
 	sem_wait(g_forks_sema);
-	*pick = 1;
+	logger(id, FORK);
+	sem_wait(g_forks_sema);
 	logger(id, FORK);
 }
 
