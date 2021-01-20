@@ -53,6 +53,7 @@ void	*Philosophers(void *idptr)
 	if (g_eat_amount == 0)
 		g_stop_threads = 1;
 	pthread_join(me.checker, NULL);
+	pthread_mutex_destroy(&(me.eat_locker));
 	return (NULL);
 }
 
@@ -81,7 +82,7 @@ void	logger(int id, int type)
 	pthread_mutex_unlock(&g_logger_mutex);
 }
 
-void	init(pthread_t	**threads, pthread_t	*liveness_thread)
+void	init(pthread_t	**threads)
 {
 	g_forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * g_data[NPHILO]);
 	g_eat_amount = g_data[NPHILO];
@@ -92,10 +93,18 @@ void	init(pthread_t	**threads, pthread_t	*liveness_thread)
 	g_stop_threads = 0;
 }
 
+void	clear(pthread_t	*threads)
+{
+	pthread_mutex_destroy(&g_logger_mutex);
+	for (size_t i = 0; i < g_data[NPHILO]; i++)
+		pthread_mutex_destroy(&g_forks[i]);
+	free(threads);
+	free(g_forks);
+}
+
 int main(int argc, char **argv)
 {
 	pthread_t	*threads;
-	pthread_t	liveness_thread;
 
 	if (error_input(argc, argv))
 		return 1;
@@ -103,7 +112,7 @@ int main(int argc, char **argv)
 	argc = 0;
 	while (argv[++argc])
 		g_data[argc - 1] = ft_atoi(argv[argc]);
-	init(&threads, &liveness_thread);
+	init(&threads);
 	gettimeofday(&g_save, NULL);
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 	{
@@ -112,4 +121,5 @@ int main(int argc, char **argv)
 	}
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 		pthread_join(threads[i] ,NULL);
+	clear(threads);
 }
