@@ -38,6 +38,7 @@ void	*Philosophers(void *idptr)
 	me.alive = 1;
 	me.eat_amount = g_data[NTPEAT];
 	ft_itoa(me.id + 1, name);
+	sem_unlink(name);
 	me.eat_locker = sem_open(name, O_CREAT, 0644, 1);
 	gettimeofday(&(me.last_meal), NULL);
 	pthread_create(&(me.checker), NULL, liveness_thread, (void *)&me);
@@ -86,8 +87,10 @@ void	init(pthread_t	**threads)
 {
 	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
+	sem_unlink("logger");
 	g_logger_sema = sem_open("logger", O_CREAT, 0644, 1);
 	g_stop_threads = 0;
+	sem_unlink("forks");
 	g_forks_sema = sem_open("forks", O_CREAT, 0664, g_data[NPHILO]);
 }
 
