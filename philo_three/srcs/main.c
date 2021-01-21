@@ -85,10 +85,10 @@ void	logger(int id, int type)
 	sem_post(g_logger_sema);
 }
 
-void	init(pthread_t	**threads)
+void	init(pid_t	**pids)
 {
 	g_eat_amount = g_data[NPHILO];
-	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
+	*pids = (pid_t *)malloc(sizeof(pid_t) * g_data[NPHILO]);
 	sem_unlink("logger");
 	g_logger_sema = sem_open("logger", O_CREAT, 0644, 1);
 	g_stop_threads = 0;
@@ -96,16 +96,16 @@ void	init(pthread_t	**threads)
 	g_forks_sema = sem_open("forks", O_CREAT, 0664, g_data[NPHILO]);
 }
 
-void	clear(pthread_t	*threads)
+void	clear(pid_t	*pids)
 {
-	free(threads);
+	free(pids);
 	sem_close(g_forks_sema);
 	sem_close(g_logger_sema);
 }
 
 int main(int argc, char **argv)
 {
-	pthread_t	*threads;
+	pid_t	*pids;
 
 	if (error_input(argc, argv))
 		return 1;
@@ -113,14 +113,20 @@ int main(int argc, char **argv)
 	argc = 0;
 	while (argv[++argc])
 		g_data[argc - 1] = ft_atoi(argv[argc]);
-	init(&threads);
+	init(&pids);
 	gettimeofday(&g_save, NULL);
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 	{
-		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
-		usleep(100);
+		pids[i] = fork();
+		if (pids[i] == -1)
+			exit(1);
+		if (pids[i] != 0)
+		{
+			Philosophers((void *)i);
+			exit(0);
+		}
 	}
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
-		pthread_join(threads[i] ,NULL);
-	clear(threads);
+		waitpid(pids[i] , NULL, 0);
+	clear(pids);
 }
