@@ -120,7 +120,7 @@ int main(int argc, char **argv)
 		pids[i] = fork();
 		if (pids[i] == -1)
 			exit(1);
-		if (pids[i] != 0)
+		if (pids[i] == 0)
 		{
 			Philosophers((void *)i);
 			exit(0);
