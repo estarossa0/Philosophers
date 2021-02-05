@@ -10,6 +10,8 @@ GOLD = \033[0;33m
 RESET = \033[0m
 
 SRC_FILES = main.c \
+			need.c \
+			libft.c \
 
 OBJECT_FILES = $(SRC_FILES:.c=.o)
 OBJECT_FILES := $(addprefix $(OBJECT_FOLDER)/, $(OBJECT_FILES))
