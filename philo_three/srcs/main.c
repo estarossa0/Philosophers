@@ -30,7 +30,7 @@ int error_input(int argc, char **argv)
 }
 
 
-void	*Philosophers(void *idptr)
+void	Philosophers(void *idptr)
 {
 	t_philo		me;
 	char		name[15];
@@ -57,7 +57,7 @@ void	*Philosophers(void *idptr)
 		g_stop_threads = 1;
 	pthread_join(me.checker, NULL);
 	sem_close(me.eat_locker);
-	return (NULL);
+	exit(0);
 }
 
 void	logger(int id, int type)
@@ -122,10 +122,7 @@ int main(int argc, char **argv)
 		if (pids[i] == -1)
 			exit(1);
 		if (pids[i] == 0)
-		{
 			Philosophers((void *)i);
-			exit(0);
-		}
 	}
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 	{
