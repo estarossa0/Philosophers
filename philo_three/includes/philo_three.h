@@ -10,6 +10,7 @@
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+#include <signal.h>
 # define NPHILO	0
 # define TDIE	1
 # define TEAT	2
