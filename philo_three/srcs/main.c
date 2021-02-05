@@ -81,7 +81,7 @@ void	logger(int id, int type)
 		write(1, "\n", 1);
 	}
 	if (type == DIED)
-		g_stop_threads = 1;
+		exit(1);
 	sem_post(g_logger_sema);
 }
 
@@ -106,6 +106,7 @@ void	clear(pid_t	*pids)
 int main(int argc, char **argv)
 {
 	pid_t	*pids;
+	int		status;
 
 	if (error_input(argc, argv))
 		return 1;
@@ -127,6 +128,14 @@ int main(int argc, char **argv)
 		}
 	}
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
-		waitpid(pids[i] , NULL, 0);
+	{
+		waitpid(0 , &status, 0);
+		if (WEXITSTATUS(status))
+		{
+			for (size_t i = 0; i < g_data[NPHILO]; i++)
+				kill(pids[i], SIGINT);
+			break ;
+		}
+	}
 	clear(pids);
 }
