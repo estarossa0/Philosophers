@@ -18,6 +18,9 @@
 # define THINK	3
 # define DIED	4
 typedef struct s_philo	t_philo;
+void					get_fork_indexs(int id, int fork_index[2]);
+int						must_die(struct timeval *last_meal);
+void					*Philosophers(void *idptr);
 int						error_input(int argc, char **argv);
 int						ft_atoi(const char *str);
 void					ft_putnbr(int n);

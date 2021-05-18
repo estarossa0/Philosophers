@@ -1,35 +1,5 @@
 #include "philo_two.h"
 
-void	*Philosophers(void *idptr)
-{
-	t_philo		me;
-	char		name[15];
-
-	me.id = (long)idptr;
-	me.alive = 1;
-	me.eat_amount = g_data[NTPEAT];
-	ft_itoa(me.id + 1, name);
-	sem_unlink(name);
-	me.eat_locker = sem_open(name, O_CREAT, 0644, 1);
-	gettimeofday(&(me.last_meal), NULL);
-	pthread_create(&(me.checker), NULL, liveness_thread, (void *)&me);
-	while (!g_stop_threads)
-	{
-		if (me.eat_amount == 0 && g_data[NTPEAT] != -1)
-			break ;
-		fork_available(me.id);
-		get_food(&me);
-		go_sleep(me.id, me.last_meal);
-	}
-	me.alive = 0;
-	g_eat_amount--;
-	if (g_eat_amount == 0)
-		g_stop_threads = 1;
-	pthread_join(me.checker, NULL);
-	sem_close(me.eat_locker);
-	return (NULL);
-}
-
 void	logger(int id, int type)
 {
 	int				ms;

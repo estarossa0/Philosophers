@@ -12,6 +12,7 @@ RESET = \033[0m
 SRC_FILES = main.c \
 			need.c \
 			libft.c \
+			philo.c \
 
 OBJECT_FILES = $(SRC_FILES:.c=.o)
 OBJECT_FILES := $(addprefix $(OBJECT_FOLDER)/, $(OBJECT_FILES))

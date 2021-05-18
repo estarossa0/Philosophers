@@ -25,8 +25,7 @@ int	error_input(int argc, char **argv)
 			}
 		}
 	}
-	if (error)
-		write(STDIN_FILENO, "Error input\n", 12);
+	write(STDIN_FILENO, "Error input\n", 12 * error);
 	return (error);
 }
 
@@ -62,41 +61,4 @@ void	fork_available(int id)
 	logger(id, FORK);
 	sem_wait(g_forks_sema);
 	logger(id, FORK);
-}
-
-void	get_food(t_philo *me)
-{
-	sem_wait(me->eat_locker);
-	logger(me->id, EATING);
-	me->eat_amount--;
-	gettimeofday(&(me->last_meal), NULL);
-	usleep(g_data[TEAT] * 1000);
-	sem_post(g_forks_sema);
-	sem_post(g_forks_sema);
-	sem_post(me->eat_locker);
-}
-
-void	go_sleep(int id, struct timeval lastmeal)
-{
-	logger(id, SLEEP);
-	usleep(g_data[TSLEEP] * 1000);
-}
-
-void	*liveness_thread(void *ptr)
-{
-	t_philo		*me;
-
-	me = (t_philo *)ptr;
-	while (me->alive && !g_stop_threads)
-	{
-		sem_wait(me->eat_locker);
-		if (must_die(&(me->last_meal)))
-		{
-			logger(me->id, DIED);
-			me->alive = 0;
-		}
-		sem_post(me->eat_locker);
-		usleep(100);
-	}
-	return (NULL);
 }

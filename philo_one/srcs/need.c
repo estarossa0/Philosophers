@@ -25,8 +25,7 @@ int	error_input(int argc, char **argv)
 			}
 		}
 	}
-	if (error)
-		write(STDIN_FILENO, "Error input\n", 12);
+	write(STDIN_FILENO, "Error input\n", 12 * error);
 	return (error);
 }
 
@@ -74,44 +73,4 @@ void	fork_available(int id)
 	logger(id, FORK);
 	pthread_mutex_lock(&g_forks[fork_index[1]]);
 	logger(id, FORK);
-}
-
-void	get_food(t_philo *me)
-{
-	int		fork_index[2];
-
-	pthread_mutex_lock(&(me->eat_locker));
-	logger(me->id, EATING);
-	me->eat_amount--;
-	gettimeofday(&(me->last_meal), NULL);
-	usleep(g_data[TEAT] * 1000);
-	get_fork_indexs(me->id, fork_index);
-	pthread_mutex_unlock(&g_forks[fork_index[0]]);
-	pthread_mutex_unlock(&g_forks[fork_index[1]]);
-	pthread_mutex_unlock(&(me->eat_locker));
-}
-
-void	go_sleep(int id, struct timeval lastmeal)
-{
-	logger(id, SLEEP);
-	usleep(g_data[TSLEEP] * 1000);
-}
-
-void	*liveness_thread(void *ptr)
-{
-	t_philo		*me;
-
-	me = (t_philo *)ptr;
-	while (me->alive && !g_stop_threads)
-	{
-		usleep(100);
-		pthread_mutex_lock(&(me->eat_locker));
-		if (must_die(&(me->last_meal)))
-		{
-			logger(me->id, DIED);
-			me->alive = 0;
-		}
-		pthread_mutex_unlock(&(me->eat_locker));
-	}
-	return (NULL);
 }
