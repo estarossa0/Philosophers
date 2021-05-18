@@ -1,5 +1,19 @@
 #include "philo_two.h"
 
+void	print_state(int type)
+{
+	if (type == FORK)
+		write(1, " has taken a fork", 17);
+	else if (type == EATING)
+		write(1, " is eating", 10);
+	else if (type == SLEEP)
+		write(1, " is sleeping", 12);
+	else if (type == THINK)
+		write(1, " is thinking", 12);
+	else if (type == DIED)
+		write(1, " died", 5);
+}
+
 void	logger(int id, int type)
 {
 	int				ms;
@@ -13,11 +27,7 @@ void	logger(int id, int type)
 		ft_putnbr(ms);
 		write(1, " ", 1);
 		ft_putnbr(id + 1);
-		type == FORK ? write(1, " has taken a fork", 17) : 1;
-		type == EATING ? write(1, " is eating", 10) : 1;
-		type == SLEEP ? write(1, " is sleeping", 12) : 1;
-		type == THINK ? write(1, " is thinking", 12) : 1;
-		type == DIED ? write(1, " died", 5) : 1;
+		print_state(type);
 		write(1, "\n", 1);
 	}
 	if (type == DIED)
