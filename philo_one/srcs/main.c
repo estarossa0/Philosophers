@@ -1,35 +1,5 @@
 #include "philo_one.h"
 
-int error_input(int argc, char **argv)
-{
-	int		error;
-	int		index;
-	int		jndex;
-
-	error = 0;
-	index = 1;
-	jndex = 0;
-	if (argc != 5 && argc != 6)
-		error = 1;
-	else
-	{
-		while (argv[index] && argv[index][jndex] && !error)
-		{
-			if (argv[index][jndex] < '0' || argv[index][jndex] > '9')
-				error = 1;
-			jndex++;
-			if (argv[index][jndex] == '\0')
-			{
-				index++;
-				jndex = 0;
-			}
-		}
-	}
-	error ? write(STDIN_FILENO, "Error input\n", 12) : 1;
-	return error;
-}
-
-
 void	*Philosophers(void *idptr)
 {
 	t_philo		me;
@@ -60,7 +30,7 @@ void	*Philosophers(void *idptr)
 void	logger(int id, int type)
 {
 	int				ms;
-	struct	timeval	now;
+	struct timeval	now;
 
 	gettimeofday(&now, NULL);
 	ms = get_ms_diff(&g_save, &now);
@@ -84,42 +54,52 @@ void	logger(int id, int type)
 
 void	init(pthread_t	**threads)
 {
-	g_forks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t) * g_data[NPHILO]);
+	int	i;
+
+	i = 0;
+	g_forks = (pthread_mutex_t *)
+		malloc(sizeof(pthread_mutex_t) * g_data[NPHILO]);
 	g_eat_amount = g_data[NPHILO];
 	*threads = (pthread_t *)malloc(sizeof(pthread_t) * g_data[NPHILO]);
 	pthread_mutex_init(&g_logger_mutex, NULL);
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
-		pthread_mutex_init(&g_forks[i], NULL);
+	while (i < g_data[NPHILO])
+		pthread_mutex_init(&g_forks[i++], NULL);
 	g_stop_threads = 0;
 }
 
 void	clear(pthread_t	*threads)
 {
+	int	i;
+
+	i = 0;
 	pthread_mutex_destroy(&g_logger_mutex);
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
-		pthread_mutex_destroy(&g_forks[i]);
+	while (i < g_data[NPHILO])
+		pthread_mutex_destroy(&g_forks[i++]);
 	free(threads);
 	free(g_forks);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	pthread_t	*threads;
+	size_t		i;
 
+	i = -1;
 	if (error_input(argc, argv))
-		return 1;
+		return (1);
 	g_data[NTPEAT] = -1;
 	argc = 0;
 	while (argv[++argc])
 		g_data[argc - 1] = ft_atoi(argv[argc]);
 	init(&threads);
 	gettimeofday(&g_save, NULL);
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
+	while (++i < g_data[NPHILO])
 	{
 		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
 		usleep(100);
 	}
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
-		pthread_join(threads[i] ,NULL);
+	i = 0;
+	while (i < g_data[NPHILO])
+		pthread_join(threads[i++], NULL);
 	clear(threads);
 }

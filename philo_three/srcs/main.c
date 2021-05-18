@@ -1,35 +1,5 @@
 #include "philo_three.h"
 
-int error_input(int argc, char **argv)
-{
-	int		error;
-	int		index;
-	int		jndex;
-
-	error = 0;
-	index = 1;
-	jndex = 0;
-	if (argc != 5 && argc != 6)
-		error = 1;
-	else
-	{
-		while (argv[index] && argv[index][jndex] && !error)
-		{
-			if (argv[index][jndex] < '0' || argv[index][jndex] > '9')
-				error = 1;
-			jndex++;
-			if (argv[index][jndex] == '\0')
-			{
-				index++;
-				jndex = 0;
-			}
-		}
-	}
-	error ? write(STDIN_FILENO, "Error input\n", 12) : 1;
-	return error;
-}
-
-
 void	Philosophers(void *idptr)
 {
 	t_philo		me;
@@ -63,7 +33,7 @@ void	Philosophers(void *idptr)
 void	logger(int id, int type)
 {
 	int				ms;
-	struct	timeval	now;
+	struct timeval	now;
 
 	gettimeofday(&now, NULL);
 	ms = get_ms_diff(&g_save, &now);
@@ -103,13 +73,13 @@ void	clear(pid_t	*pids)
 	sem_close(g_logger_sema);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	pid_t	*pids;
 	int		status;
 
 	if (error_input(argc, argv))
-		return 1;
+		return (1);
 	g_data[NTPEAT] = -1;
 	argc = 0;
 	while (argv[++argc])
@@ -126,7 +96,7 @@ int main(int argc, char **argv)
 	}
 	for (size_t i = 0; i < g_data[NPHILO]; i++)
 	{
-		waitpid(0 , &status, 0);
+		waitpid(0, &status, 0);
 		if (WEXITSTATUS(status))
 		{
 			for (size_t i = 0; i < g_data[NPHILO]; i++)
