@@ -1,5 +1,5 @@
-#ifndef FT_PHILO_TWO_H
-# define FT_PHILO_TWO_H
+#ifndef PHILO_TWO_H
+# define PHILO_TWO_H
 # define _DEFAULT_SOURCE
 # include <unistd.h>
 # include <pthread.h>
@@ -23,7 +23,7 @@
 typedef struct s_philo
 {
 	int				id;
-	struct	timeval	last_meal;
+	struct timeval	last_meal;
 	pthread_t		checker;
 	sem_t			*eat_locker;
 	int				eat_amount;
@@ -42,7 +42,7 @@ char			*ft_itoa(int n, char result[15]);
 int				g_data[5];
 int				g_eat_amount;
 short			g_stop_threads;
-struct	timeval	g_save;
+struct timeval	g_save;
 sem_t			*g_logger_sema;
 sem_t			*g_forks_sema;
 #endif
