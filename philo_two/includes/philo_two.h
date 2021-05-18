@@ -20,7 +20,7 @@
 # define SLEEP	2
 # define THINK	3
 # define DIED	4
-typedef	struct	s_philo
+typedef struct s_philo
 {
 	int				id;
 	struct	timeval	last_meal;
@@ -29,6 +29,7 @@ typedef	struct	s_philo
 	int				eat_amount;
 	short			alive;
 }				t_philo;
+int				error_input(int argc, char **argv);
 int				ft_atoi(const char *str);
 void			ft_putnbr(int n);
 void			*liveness_thread(void *ptr);
