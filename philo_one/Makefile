@@ -1,5 +1,5 @@
 NAME = philo_one
-FLAGS = # -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 SRC_FOLDER = ./srcs
 HEADER_FOLDER = ./includes
 OBJECT_FOLDER = ./objects

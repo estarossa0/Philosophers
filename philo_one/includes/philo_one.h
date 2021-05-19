@@ -25,7 +25,7 @@ int						error_input(int argc, char **argv);
 int						ft_atoi(const char *str);
 void					ft_putnbr(int n);
 void					*liveness_thread(void *ptr);
-void					go_sleep(int id, struct timeval lastmeal);
+void					go_sleep(int id);
 void					get_food(t_philo *me);
 void					fork_available(int id);
 int						get_ms_diff(struct timeval *a, struct timeval *b);

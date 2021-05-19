@@ -39,10 +39,10 @@ void	get_food(t_philo *me)
 	sem_post(g_forks_sema);
 	sem_post(g_forks_sema);
 	sem_post(me->eat_locker);
-	go_sleep(me->id, me->last_meal);
+	go_sleep(me->id);
 }
 
-void	go_sleep(int id, struct timeval lastmeal)
+void	go_sleep(int id)
 {
 	logger(id, SLEEP);
 	usleep(g_data[TSLEEP] * 1000);

@@ -76,13 +76,13 @@ int	main(int argc, char **argv)
 		g_data[argc - 1] = ft_atoi(argv[argc]);
 	init(&threads);
 	gettimeofday(&g_save, NULL);
-	while (++i < g_data[NPHILO])
+	while ((int)++i < g_data[NPHILO])
 	{
 		pthread_create(&threads[i], NULL, Philosophers, (void *)i);
 		usleep(100);
 	}
 	i = 0;
-	while (i < g_data[NPHILO])
+	while ((int)i < g_data[NPHILO])
 		pthread_join(threads[i++], NULL);
 	clear(threads);
 }

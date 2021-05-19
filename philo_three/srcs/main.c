@@ -73,7 +73,7 @@ int	main(int argc, char **argv)
 		g_data[argc - 1] = ft_atoi(argv[argc]);
 	init(&pids);
 	gettimeofday(&g_save, NULL);
-	while (i < g_data[NPHILO])
+	while ((int)i < g_data[NPHILO])
 	{
 		pids[i] = fork();
 		if (pids[i] == -1)

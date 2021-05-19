@@ -16,7 +16,7 @@ void	*Philosophers(void *idptr)
 			break ;
 		fork_available(me.id);
 		get_food(&me);
-		go_sleep(me.id, me.last_meal);
+		go_sleep(me.id);
 	}
 	me.alive = 0;
 	g_eat_amount--;
@@ -42,7 +42,7 @@ void	get_food(t_philo *me)
 	pthread_mutex_unlock(&(me->eat_locker));
 }
 
-void	go_sleep(int id, struct timeval lastmeal)
+void	go_sleep(int id)
 {
 	logger(id, SLEEP);
 	usleep(g_data[TSLEEP] * 1000);
