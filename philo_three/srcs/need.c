@@ -55,6 +55,20 @@ int	must_die(struct timeval *last_meal)
 	return (0);
 }
 
+void	print_state(int type)
+{
+	if (type == FORK)
+		write(1, " has taken a fork", 17);
+	else if (type == EATING)
+		write(1, " is eating", 10);
+	else if (type == SLEEP)
+		write(1, " is sleeping", 12);
+	else if (type == THINK)
+		write(1, " is thinking", 12);
+	else if (type == DIED)
+		write(1, " died", 5);
+}
+
 void	fork_available(int id)
 {
 	sem_wait(g_forks_sema);

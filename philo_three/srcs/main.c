@@ -13,11 +13,7 @@ void	logger(int id, int type)
 		ft_putnbr(ms);
 		write(1, " ", 1);
 		ft_putnbr(id + 1);
-		type == FORK ? write(1, " has taken a fork", 17) : 1;
-		type == EATING ? write(1, " is eating", 10) : 1;
-		type == SLEEP ? write(1, " is sleeping", 12) : 1;
-		type == THINK ? write(1, " is thinking", 12) : 1;
-		type == DIED ? write(1, " died", 5) : 1;
+		print_state(type);
 		write(1, "\n", 1);
 	}
 	if (type == DIED)
@@ -43,11 +39,32 @@ void	clear(pid_t	*pids)
 	sem_close(g_logger_sema);
 }
 
+void	join_proc(pid_t *pids)
+{
+	int	status;
+	int	i;
+
+	i = 0;
+	while (i < g_data[NPHILO])
+	{
+		waitpid(0, &status, 0);
+		if (WEXITSTATUS(status))
+		{
+			i = 0;
+			while (i < g_data[NPHILO])
+				kill(pids[i++], SIGINT);
+			break ;
+		}
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	pid_t	*pids;
-	int		status;
+	size_t	i;
 
+	i = 0;
 	if (error_input(argc, argv))
 		return (1);
 	g_data[NTPEAT] = -1;
@@ -56,23 +73,15 @@ int	main(int argc, char **argv)
 		g_data[argc - 1] = ft_atoi(argv[argc]);
 	init(&pids);
 	gettimeofday(&g_save, NULL);
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
+	while (i < g_data[NPHILO])
 	{
 		pids[i] = fork();
 		if (pids[i] == -1)
 			exit(1);
 		if (pids[i] == 0)
 			Philosophers((void *)i);
+		i++;
 	}
-	for (size_t i = 0; i < g_data[NPHILO]; i++)
-	{
-		waitpid(0, &status, 0);
-		if (WEXITSTATUS(status))
-		{
-			for (size_t i = 0; i < g_data[NPHILO]; i++)
-				kill(pids[i], SIGINT);
-			break ;
-		}
-	}
+	join_proc(pids);
 	clear(pids);
 }

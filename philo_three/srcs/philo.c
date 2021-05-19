@@ -19,7 +19,6 @@ void	Philosophers(void *idptr)
 			break ;
 		fork_available(me.id);
 		get_food(&me);
-		go_sleep(me.id, me.last_meal);
 	}
 	me.alive = 0;
 	g_eat_amount--;
@@ -40,6 +39,7 @@ void	get_food(t_philo *me)
 	sem_post(g_forks_sema);
 	sem_post(g_forks_sema);
 	sem_post(me->eat_locker);
+	go_sleep(me->id, me->last_meal);
 }
 
 void	go_sleep(int id, struct timeval lastmeal)

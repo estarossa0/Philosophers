@@ -30,6 +30,7 @@ typedef struct s_philo
 	int				eat_amount;
 	short			alive;
 }				t_philo;
+void			print_state(int type);
 int				must_die(struct timeval *last_meal);
 void			Philosophers(void *idptr);
 int				error_input(int argc, char **argv);
