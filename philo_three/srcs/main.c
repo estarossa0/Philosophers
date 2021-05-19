@@ -77,7 +77,7 @@ int	main(int argc, char **argv)
 	{
 		pids[i] = fork();
 		if (pids[i] == -1)
-			exit(1);
+			fail(pids);
 		if (pids[i] == 0)
 			Philosophers((void *)i);
 		i++;

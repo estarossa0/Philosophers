@@ -1,5 +1,15 @@
 #include "philo_three.h"
 
+void	fail(pid_t *pids)
+{
+	int	i;
+
+	i = 0;
+	while (i < g_data[NPHILO])
+		kill(pids[i++], SIGINT);
+	exit(1);
+}
+
 void	Philosophers(void *idptr)
 {
 	t_philo		me;
