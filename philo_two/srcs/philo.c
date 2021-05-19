@@ -46,6 +46,7 @@ void	go_sleep(int id)
 {
 	logger(id, SLEEP);
 	usleep(g_data[TSLEEP] * 1000);
+	logger(id, THINK);
 }
 
 void	*liveness_thread(void *ptr)
